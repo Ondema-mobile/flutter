@@ -255,7 +255,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // this launches the URL in a browser on  the device
   _launchURL(String url) async {
+
     _stopLoadingIndicators();
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -266,7 +268,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // this resets the clickability  of the image and the Loading indicator.
   _stopLoadingIndicators() {
+
     setState(() {
+
       if (!firstClickable) {
         firstWidget = Container();
         firstClickable = true;
