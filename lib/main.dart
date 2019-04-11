@@ -8,8 +8,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 
+// entry point for a flutter app
 void main() => runApp(MyApp());
 
+// business as usual here
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Home screen is a stateful widget - nothing special
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
@@ -32,13 +35,23 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
+/// The state for the Home Page widget.
+/// 
+/// The app shows 3 images in a ListView, which are loaded from the assets folder.
+/// 
+/// Once an image is clicked, it is saved as a file locally, and then pushed to
+///   the Ondema server using a MultipartRequest. Then, a StreamedResponse object 
+///   is received, in it a URL to a store that was dynamically rendered based 
+///   on the image file that was provided in the request.
 class _MyHomePageState extends State<MyHomePage> {
 
+  // these shoe a "loading" indicator after an image was clicked.
   Widget firstWidget = Container();
   Widget secondWidget = Container();
   Widget thirdWidget = Container();
 
+  // these control the clickability of an image, to avoid having another 
+  // http request sent while an existing one is still running.
   bool firstClickable = true;
   bool secondClickable = true;
   bool thirdClickable = true;
@@ -82,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           firstWidget = SizedBox(child: CircularProgressIndicator(), height: 100, width: 100);
                         });
-                        _getOndema('assets/Paul_Cezanne_landscape.jpg');
+                        _saveImageFile('assets/Paul_Cezanne_landscape.jpg');
                       }
                     },
                     child: AspectRatio(
@@ -122,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           secondWidget = SizedBox(child: CircularProgressIndicator(), height: 100, width: 100);
                         });
-                        _getOndema('assets/Paul_Gauguin_portrait.jpg');
+                        _saveImageFile('assets/Paul_Gauguin_portrait.jpg');
                       }
                     },
                     child: AspectRatio(
@@ -162,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           thirdWidget = SizedBox(child: CircularProgressIndicator(), height: 100, width: 100);
                         });
-                        _getOndema('assets/Titian_Diana_and_Actaeon_square.jpg');
+                        _saveImageFile('assets/Titian_Diana_and_Actaeon_square.jpg');
                       }
                     },
                     child: AspectRatio(
@@ -199,7 +212,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-  Future<Null> _getOndema(String imageUrl) async {
+  // this saves an image from the local "Assets" folder as a file in app's document directory.
+  Future<Null> _saveImageFile(String imageUrl) async {
 
     var documentDirectory = await getApplicationDocumentsDirectory();
 
@@ -209,7 +223,10 @@ class _MyHomePageState extends State<MyHomePage> {
     file.writeAsBytes(bundlePath.buffer.asUint8List(bundlePath.offsetInBytes, bundlePath.lengthInBytes))
         .then((file) => _uploadFile(file));
   }
-    _uploadFile(File file) async {
+
+
+  // this sends the image file to Ondema's servers, and receives a URL back.
+  _uploadFile(File file) async {
 
     var url = 'https://admin.ondema-m.com/api/get_shop_url';
 
@@ -234,7 +251,10 @@ class _MyHomePageState extends State<MyHomePage> {
       _launchURL(shopUrl);
     }
   }
-      _launchURL(String url) async {
+
+
+  // this launches the URL in a browser on  the device
+  _launchURL(String url) async {
     _stopLoadingIndicators();
     if (await canLaunch(url)) {
       await launch(url);
@@ -242,7 +262,10 @@ class _MyHomePageState extends State<MyHomePage> {
       throw 'Could not launch $url';
     }
   }
-        _stopLoadingIndicators() {
+
+
+  // this resets the clickability  of the image and the Loading indicator.
+  _stopLoadingIndicators() {
     setState(() {
       if (!firstClickable) {
         firstWidget = Container();
