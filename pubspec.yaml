@@ -1,0 +1,31 @@
+name: ondema_demo_flutter
+description: Ondema demo for Mobile, Flutter platform
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  url_launcher: ^5.0.2
+  http: ^0.12.0+2
+  path_provider: ^0.5.0+1
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+  - assets/Paul_Cezanne_landscape.jpg
+  - assets/Paul_Gauguin_portrait.jpg
+  - assets/Titian_Diana_and_Actaeon_square.jpg
